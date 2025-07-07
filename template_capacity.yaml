@@ -1,0 +1,72 @@
+zabbix_export:
+  version: '6.0'
+  date: '2025-07-07T10:04:35Z'
+  groups:
+    - uuid: 3a8d6beed81947f4821cca929b64dd9b
+      name: Capacity
+  templates:
+    - uuid: 63275da44b4840a6b28bbbc14992f90c
+      template: 'Template Capacity'
+      name: 'Template Capacity'
+      description: 'This template Capacity take RAM, CPU, and disk aggregate metrics from all platforms via zabbix host groups and calculate them.'
+      groups:
+        - name: Capacity
+      items:
+        - uuid: 5a50591879c448c6902bc4dabe0befb4
+          name: '{HOST.NAME} Avg CPU'
+          type: CALCULATED
+          key: cpu.avg
+          delay: 6h
+          value_type: FLOAT
+          params: 'avg(last_foreach(/*/system.cpu.util[,total]?[group="{$GROUP.NAME}"],1m))'
+        - uuid: 3c0241b217a8401b91aa830a63a3936b
+          name: '{HOST.NAME} Max CPU'
+          type: CALCULATED
+          key: cpu.max
+          delay: 6h
+          value_type: FLOAT
+          params: 'max(last_foreach(/*/system.cpu.util[,total]?[group="{$GROUP.NAME}"],1m))'
+        - uuid: 74586affed7e4540a37e006f2dbfd858
+          name: '{HOST.NAME} CPU Num'
+          type: CALCULATED
+          key: cpu.num
+          delay: 24h
+          params: 'sum(last_foreach(/*/system.cpu.num?[group="{$GROUP.NAME}"],1m))'
+        - uuid: db567c98ce734809b6a8d5c59b790ff0
+          name: '{HOST.NAME} Disk Total'
+          type: CALCULATED
+          key: vfs.fs.size.total
+          delay: 24h
+          params: 'sum(last_foreach(/*/vfs.fs.size[*,total]?[group="{$GROUP.NAME}"],1m))'
+        - uuid: bd996c6e90ed4863aa2e186315e02a32
+          name: '{HOST.NAME} Disk Used avg'
+          type: CALCULATED
+          key: vfs.fs.size.used.avg
+          delay: 6h
+          params: 'avg(last_foreach(/*/vfs.fs.size[*,used]?[group="{$GROUP.NAME}"],1m))'
+        - uuid: eca788cbbb084af89f9d4f61a4048762
+          name: '{HOST.NAME} Disk Used max'
+          type: CALCULATED
+          key: vfs.fs.size.used.max
+          delay: 6h
+          params: 'max(last_foreach(/*/vfs.fs.size[*,used]?[group="{$GROUP.NAME}"],1m))'
+        - uuid: ebacf7c01e864235a246c3b18cee1e88
+          name: '{HOST.NAME} RAM Total'
+          type: CALCULATED
+          key: vm.memory.total
+          delay: 24h
+          params: 'sum(last_foreach(/*/vm.memory.size[total]?[group="{$GROUP.NAME}"],1m))'
+        - uuid: 33d433623f774da49b946a491c9d88cf
+          name: '{HOST.NAME} RAM Used avg'
+          type: CALCULATED
+          key: vm.memory.utilization.avg
+          delay: 6h
+          value_type: FLOAT
+          params: 'avg(last_foreach(/*/vm.memory.utilization?[group="{$GROUP.NAME}"],1m))'
+        - uuid: 95afe48160ee416ab4ab92e109ecdbf3
+          name: '{HOST.NAME} RAM Used max'
+          type: CALCULATED
+          key: vm.memory.utilization.max
+          delay: 6h
+          value_type: FLOAT
+          params: 'max(last_foreach(/*/vm.memory.utilization?[group="{$GROUP.NAME}"],1m))'
